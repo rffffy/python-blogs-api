@@ -3,16 +3,18 @@
 ### Description
 A simple REST Api for blog posts.
 
-Using CRUD operations with GET, POST, DELETE and PUT methods for 
+### Features
 
-Posts:
-  - Create Posts
-  - Get a Post filtered by id
-  - Delete a Post filtered by id
-  - Update a Post filtered by id
+1. CRUD operations with GET, POST, DELETE and PUT methods for:
 
-Users:
-    - Create a User
-    - Get a User filtered by id
+   - **Posts**:
+     - Create Posts
+     - Get a Post filtered by id
+     - Delete a Post filtered by id
+     - Update a Post filtered by id
 
-Object Relational Mapping with SQLAlchemy
+   - **Users**:
+     - Create a User
+     - Get a User filtered by id
+
+2. Object Relational Mapping with **SQLAlchemy**
