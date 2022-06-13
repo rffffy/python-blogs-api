@@ -1,4 +1,3 @@
-from turtle import title
 from fastapi import Depends, FastAPI, Response, status, HTTPException
 from fastapi.params import Body
 from pydantic import BaseModel
@@ -9,6 +8,7 @@ import time
 from sqlalchemy.orm import Session
 from . import models, schemas
 from .database import engine, get_db
+from typing import List
 
 
 models.Base.metadata.create_all(bind=engine)
@@ -39,7 +39,7 @@ def root():
 
 
 # Get all Posts
-@app.get("/posts")
+@app.get("/posts", response_model=List[schemas.Post])
 def get_posts(db: Session = Depends(get_db)):
     """
     Get method, to get all the posts
@@ -50,7 +50,7 @@ def get_posts(db: Session = Depends(get_db)):
 
 
 # Create a Post
-@app.post("/posts", status_code=status.HTTP_201_CREATED)
+@app.post("/posts", status_code=status.HTTP_201_CREATED, response_model=schemas.Post)
 def create_posts(post: schemas.PostCreate, db: Session = Depends(get_db)):
     """
     Post method, to create a post
@@ -64,11 +64,11 @@ def create_posts(post: schemas.PostCreate, db: Session = Depends(get_db)):
     return new_post
 
 
-# Get a Post filtered by id
-@app.get("/posts/{id}")
+# Get an individual Post filtered by id
+@app.get("/posts/{id}", response_model=schemas.Post)
 def get_post(id: int, response: Response, db: Session = Depends(get_db)):
     """
-    Get method, to get a Post filtered by id
+    Get method, to get an individual Post filtered by id
     """
     post = db.query(models.Post).filter(models.Post.id == id).first()
     
@@ -98,7 +98,7 @@ def delete_post(id: int, db: Session = Depends(get_db)):
 
 
 # Update a Post filtered by id
-@app.put("/posts/{id}")
+@app.put("/posts/{id}", response_model=schemas.Post)
 def update_post(id: int, post: schemas.PostCreate, db: Session = Depends(get_db)):
     """
     Put method, to update a Post filtered by id
