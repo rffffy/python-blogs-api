@@ -1,6 +1,7 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 from datetime import datetime
 
+# Post Schema
 class PostBase(BaseModel):
     title: str
     content: str
@@ -10,9 +11,25 @@ class PostCreate(PostBase):
     pass
 
 
-# Response
+# Post Response Schema
 class Post(PostBase):
     id: int
+    created_at: datetime
+
+    class Config:
+        orm_mode = True
+
+
+# User Schema
+class UserCreate(BaseModel):
+    email: EmailStr
+    password: str
+
+
+# User Response Schema
+class UserOut(BaseModel):
+    id: int
+    email: EmailStr
     created_at: datetime
 
     class Config:
