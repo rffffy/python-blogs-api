@@ -23,6 +23,9 @@ To view api documentations(after server is running): [{HOST_ADDRESS}/docs](http:
    - **Users**:
      - Create a User
      - Get a User filtered by id
+   
+   - **Votes:**
+     - Users can Vote for a Post
 
 2. Object Relational Mapping with **SQLAlchemy**
 
