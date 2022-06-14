@@ -13,7 +13,7 @@ router = APIRouter(
 
 # Get all Posts
 @router.get("/", response_model=List[schemas.Post])
-def get_posts(db: Session = Depends(get_db), user_id = Depends(oauth2.get_current_user)):
+def get_posts(db: Session = Depends(get_db), current_user = Depends(oauth2.get_current_user)):
     """
     Get method, to get all the posts
     """
@@ -41,7 +41,7 @@ user_id = Depends(oauth2.get_current_user)):
 # Get an individual Post filtered by id
 @router.get("/{id}", response_model=schemas.Post)
 def get_post(id: int, response: Response, db: Session = Depends(get_db), 
-user_id = Depends(oauth2.get_current_user)):
+current_user = Depends(oauth2.get_current_user)):
     """
     Get method, to get an individual Post filtered by id
     """
@@ -56,7 +56,7 @@ user_id = Depends(oauth2.get_current_user)):
 
 # Delete a Post filtered by id
 @router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_post(id: int, db: Session = Depends(get_db), user_id = Depends(oauth2.get_current_user)):
+def delete_post(id: int, db: Session = Depends(get_db), current_user = Depends(oauth2.get_current_user)):
     """
     Delete method, to delete a Post filtered by id
     """
@@ -75,7 +75,7 @@ def delete_post(id: int, db: Session = Depends(get_db), user_id = Depends(oauth2
 # Update a Post filtered by id
 @router.put("/{id}", response_model=schemas.Post)
 def update_post(id: int, post: schemas.PostCreate, db: Session = Depends(get_db), 
-user_id = Depends(oauth2.get_current_user)):
+current_user = Depends(oauth2.get_current_user)):
     """
     Put method, to update a Post filtered by id
     """
