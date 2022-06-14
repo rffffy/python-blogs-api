@@ -11,7 +11,7 @@ router = APIRouter(
     tags=['Posts']
 )
 
-# Get all Posts
+# Get all Posts of a User
 @router.get("/", response_model=List[schemas.Post])
 def get_posts(db: Session = Depends(get_db), current_user = Depends(oauth2.get_current_user)):
     """
@@ -38,7 +38,7 @@ current_user = Depends(oauth2.get_current_user)):
     return new_post
 
 
-# Get an individual Post filtered by id
+# Get an individual Post, of logged in User, filtered by id
 @router.get("/{id}", response_model=schemas.Post)
 def get_post(id: int, response: Response, db: Session = Depends(get_db), 
 current_user = Depends(oauth2.get_current_user)):
@@ -50,7 +50,7 @@ current_user = Depends(oauth2.get_current_user)):
     if not post:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, 
         detail=f"post with id: {id} was not found")
-
+    
     return post
 
 
