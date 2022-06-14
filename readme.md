@@ -7,7 +7,7 @@ A simple REST Api for blog posts.
 Start server, run on command line: 
 `uvicorn app.main:app --reload`
 
-To view api documentations: [server-address/docs](http://localhost:8000/docs)
+To view api documentations(after server is running): [server-address/docs](http://localhost:8000/docs)
 
 ### Features
 
