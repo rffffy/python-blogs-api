@@ -1,4 +1,5 @@
 from fastapi import Depends, Response, status, HTTPException, APIRouter
+from sqlalchemy import func
 from sqlalchemy.orm import Session
 from typing import List, Optional
 
@@ -12,13 +13,24 @@ router = APIRouter(
 )
 
 # Get all Posts of a User
-@router.get("/", response_model=List[schemas.Post])
+@router.get("/", response_model=List[schemas.PostOut])
 def get_posts(db: Session = Depends(get_db), current_user = Depends(oauth2.get_current_user),
 limit: int = 10, skip: int = 0, search: Optional[str] = ""):
     """
     Get method, to get all the posts
     """
-    posts = db.query(models.Post).filter(models.Post.title.contains(search)).limit(limit).offset(skip).all()
+    # posts = db.query(models.Post).filter(models.Post.title.contains(search)).limit(limit).offset(skip).all()
+
+    posts = db.query(models.Post, func.count(models.Vote.post_id).label("votes")
+        ).join(
+            models.Vote, 
+            models.Vote.post_id == models.Post.id, 
+            isouter=True
+        ).group_by(models.Post.id
+        ).filter(models.Post.title.contains(search)
+        ).limit(limit
+        ).offset(skip
+        ).all()
     
     return posts
 
@@ -40,13 +52,22 @@ current_user = Depends(oauth2.get_current_user)):
 
 
 # Get an individual Post, of logged in User, filtered by id
-@router.get("/{id}", response_model=schemas.Post)
+@router.get("/{id}", response_model=schemas.PostOut)
 def get_post(id: int, response: Response, db: Session = Depends(get_db), 
 current_user = Depends(oauth2.get_current_user)):
     """
     Get method, to get an individual Post filtered by id
     """
-    post = db.query(models.Post).filter(models.Post.id == id).first()
+    # post = db.query(models.Post).filter(models.Post.id == id).first()
+
+    post = db.query(models.Post, func.count(models.Vote.post_id).label("votes")
+    ).join(
+        models.Vote, 
+        models.Vote.post_id == models.Post.id, 
+        isouter=True
+    ).group_by(models.Post.id
+    ).filter(models.Post.id == id
+    ).first()
     
     if not post:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, 
