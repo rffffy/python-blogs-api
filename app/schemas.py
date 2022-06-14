@@ -12,11 +12,22 @@ class PostCreate(PostBase):
     pass
 
 
+# User Response Schema
+class UserOut(BaseModel):
+    id: int
+    email: EmailStr
+    created_at: datetime
+
+    class Config:
+        orm_mode = True
+
+
 # Post Response Schema
 class Post(PostBase):
     id: int
     created_at: datetime
     owner_id: int
+    owner: UserOut
 
     class Config:
         orm_mode = True
@@ -26,16 +37,6 @@ class Post(PostBase):
 class UserCreate(BaseModel):
     email: EmailStr
     password: str
-
-
-# User Response Schema
-class UserOut(BaseModel):
-    id: int
-    email: EmailStr
-    created_at: datetime
-
-    class Config:
-        orm_mode = True
 
 
 class UserLogin(BaseModel):
