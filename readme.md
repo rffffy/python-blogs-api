@@ -15,7 +15,8 @@ To view api documentations(after server is running): [{HOST_ADDRESS}/docs](http:
 
    - **Posts**:
      - Create Posts
-     - Get a Post filtered by id
+     - Get all Posts of the logged in User
+     - Get a Post, of the logged in User, filtered by id
      - Delete a Post filtered by id
      - Update a Post filtered by id
 
