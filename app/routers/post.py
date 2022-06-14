@@ -60,11 +60,16 @@ def delete_post(id: int, db: Session = Depends(get_db), current_user = Depends(o
     """
     Delete method, to delete a Post filtered by id
     """
-    post_query = post = db.query(models.Post).filter(models.Post.id == id)
+    post_query = db.query(models.Post).filter(models.Post.id == id)
+    post_to_delete = post_query.first()
 
-    if post_query.first() == None:
+    if post_to_delete == None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, 
         detail=f"post with id: {id} does not exist")
+
+    if post_to_delete.owner_id != current_user.id:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, 
+        detail=f"Not authorized to perform requested action")
 
     post_query.delete(synchronize_session=False)
     db.commit()
@@ -85,6 +90,10 @@ current_user = Depends(oauth2.get_current_user)):
     if post_to_update == None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, 
         detail=f"post with id: {id} does not exist")
+
+    if post_to_update.owner_id != current_user.id:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, 
+        detail=f"Not authorized to perform requested action")
 
     post_query.update(post.dict(), synchronize_session=False)
 
