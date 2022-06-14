@@ -25,11 +25,11 @@ def get_posts(db: Session = Depends(get_db), current_user = Depends(oauth2.get_c
 # Create a Post
 @router.post("/", status_code=status.HTTP_201_CREATED, response_model=schemas.Post)
 def create_posts(post: schemas.PostCreate, db: Session = Depends(get_db), 
-user_id = Depends(oauth2.get_current_user)):
+current_user = Depends(oauth2.get_current_user)):
     """
     Post method, to create a post
     """
-    new_post = models.Post(**post.dict())
+    new_post = models.Post(owner_id=current_user.id, **post.dict())
 
     db.add(new_post)
     db.commit()
